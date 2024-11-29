@@ -1,36 +1,10 @@
 import { useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
-import ThemeToggle from '../components/ThemeToggle'; // Import the ThemeToggle component
-
-
-// Define types for the API response
-interface Thumbnail {
-  source: string;
-}
-
-interface Page {
-  title: string;
-  extract: string;
-  thumbnail?: Thumbnail;
-  missing?: boolean;
-  extlinks?: { "*": string }[];
-}
-
-interface QueryResult {
-  query?: { pages: Record<string, Page> };
-}
-
-interface SearchResult {
-  title: string;
-  extract: string;
-  image: string | null;
-  references: { ["*"]: string }[];
-}
+// import ThemeToggle from '../components/ThemeToggle'; 
 
 const Home: React.FC = () => {
   const [query, setQuery] = useState<string>("");
-  const [result, setResult] = useState<SearchResult | null>(null);
+  const [result, setResult] = useState<any | null>(null);  // Placeholder for results
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
@@ -50,7 +24,7 @@ const Home: React.FC = () => {
       const response = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
       );
-      const data: QueryResult = await response.json();
+      const data = await response.json();
 
       if (!data.query) {
         setError("No results found.");
@@ -89,25 +63,25 @@ const Home: React.FC = () => {
       <Head>
         <title>WikiBrowse</title>
       </Head>
-      <div className="h-screen w-screen bg-gray-100 dark:bg-gray-900">
-        <div className="h-full w-full max-w-screen-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col mx-auto">
+      <div className="h-screen w-screen bg-gray-900">
+        <div className="h-full w-full max-w-screen-lg bg-gray-800 shadow-lg rounded-lg flex flex-col mx-auto">
           {/* Title Bar */}
-          <div className="bg-gray-200 dark:bg-gray-700 px-4 py-2 flex items-center justify-between border-b border-gray-300 dark:border-gray-600">
+          <div className="bg-gray-700 px-4 py-2 flex items-center justify-between border-b border-gray-600">
             <div className="flex space-x-2">
               <span className="w-3 h-3 bg-red-500 rounded-full"></span>
               <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
               <span className="w-3 h-3 bg-green-500 rounded-full"></span>
             </div>
-            <h1 className="font-semibold text-black dark:text-white">WikiBrowse</h1>
+            <h1 className="font-semibold text-white">WikiBrowse</h1>
             {/* Theme Toggle Component */}
             <ThemeToggle />
           </div>
 
           {/* Search Bar */}
-          <div className="flex items-center px-6 py-4 border-b border-gray-300 dark:border-gray-600">
+          <div className="flex items-center px-6 py-4 border-b border-gray-600">
             <input
               type="text"
-              className="flex-grow border rounded-lg px-4 py-2 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-grow border rounded-lg px-4 py-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter a search term"
               value={query}
               onChange={handleSearchInput}
@@ -120,6 +94,31 @@ const Home: React.FC = () => {
             </button>
           </div>
 
+          {/* Landing Page Content */}
+          {isLandingPage && (
+            <div className="flex-grow p-6 text-center">
+              <h2 className="text-2xl font-bold text-white mb-4">
+                Welcome to WikiBrowse!
+              </h2>
+              <p className="text-white mb-6">
+                WikiBrowse is a minimalist browser built with <strong>Next.js</strong> that allows users to search and explore <strong>Wikipedia</strong> articles. Unlike traditional browsers, WikiBrowse fetches article <strong>summaries</strong> and displays related resources, offering a concise and easy-to-read experience.
+              </p>
+              <p className="text-white mb-6">
+                The app uses <strong>Next.js</strong> for server-side rendering, <strong>TypeScript (TSX)</strong> for type safety, and <strong>Tailwind CSS</strong> for styling. All data is fetched directly from the <strong>Wikipedia API</strong>, so there is no backend involved.
+              </p>
+
+              <h3 className="text-xl font-semibold text-white mb-4">Try searching for:</h3>
+              <ul className="list-disc text-left mx-auto space-y-2 max-w-sm text-white mb-6">
+                <li><strong>React (JavaScript library)</strong></li>
+                <li><strong>Next.js (Framework)</strong></li>
+                <li><strong>TypeScript (Programming Language)</strong></li>
+                <li><strong>Wikipedia</strong></li>
+                <li><strong>Tailwind CSS (Utility-First CSS Framework)</strong></li>
+              </ul>
+              <p className="text-white">Enter a search term to begin!</p>
+            </div>
+          )}
+
           {/* Results */}
           {!isLandingPage && (
             <div className="flex-grow p-6 overflow-y-auto">
@@ -130,7 +129,7 @@ const Home: React.FC = () => {
                   {/* Main Content */}
                   <div>
                     {result.image && (
-                      <Image
+                      <img
                         src={result.image}
                         alt={result.title}
                         width={500}
@@ -138,16 +137,16 @@ const Home: React.FC = () => {
                         className="w-full h-auto mb-4 rounded-lg"
                       />
                     )}
-                    <h2 className="text-2xl font-bold text-black dark:text-white">{result.title}</h2>
+                    <h2 className="text-2xl font-bold text-white">{result.title}</h2>
                     <div
-                      className="mt-2 text-black dark:text-white"
+                      className="mt-2 text-white"
                       dangerouslySetInnerHTML={{ __html: result.extract }}
                     />
                   </div>
 
                   {/* References */}
                   <div className="border-l pl-6">
-                    <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">
+                    <h3 className="text-lg font-semibold mb-4 text-white">
                       References:
                     </h3>
                     <ul className="space-y-4">

@@ -27,6 +27,7 @@ const LanguagePicker: React.FC<LanguagePickerProps> = ({ language, setLanguage }
     { code: "fa", label: "فارسی (Persian)" },
     { code: "sv", label: "Svenska (Swedish)" },
     { code: "fi", label: "Suomi (Finnish)" },
+    { code: "ga", label: "Gaeilge (Irish)" }, // Added Irish
   ];
 
   return (
@@ -34,7 +35,7 @@ const LanguagePicker: React.FC<LanguagePickerProps> = ({ language, setLanguage }
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
-        className="bg-gray-700 text-white px-4 py-2 rounded-lg border focus:outline-none"
+        className="bg-gray-700 text-white px-3 py-1 rounded-lg border focus:outline-none text-sm" // Adjusted size with text-sm and smaller padding
       >
         {languages.map((lang) => (
           <option key={lang.code} value={lang.code}>

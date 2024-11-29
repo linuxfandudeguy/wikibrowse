@@ -1,32 +1,6 @@
 import { useState } from "react";
 import Head from "next/head";
-import Image from "next/image"; // Import the Image component
-
-// Define types for the API response
-interface Thumbnail {
-  source: string;
-}
-
-interface Page {
-  title: string;
-  extract: string; // This will now include raw HTML
-  thumbnail?: Thumbnail;
-  missing?: boolean; // The missing property exists on a page if the page doesn't exist
-  extlinks?: { "*": string }[];
-}
-
-interface QueryResult {
-  query?: { pages: Record<string, Page> }; // Make the query property optional
-}
-
-interface SuggestionResult {
-  query: {
-    search: string[];
-    title: string[];
-    description: string[];
-    url: string[];
-  };
-}
+import Image from "next/image";
 
 interface SearchResult {
   title: string;
@@ -41,12 +15,12 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
-  const [suggestions, setSuggestions] = useState<{ title: string; url: string; description: string }[]>([]); // Store suggestions
-  const [isSuggestionsVisible, setIsSuggestionsVisible] = useState<boolean>(false); // To show/hide suggestions
+  const [suggestions, setSuggestions] = useState<{ title: string; url: string }[]>([]);
+  const [isSuggestionsVisible, setIsSuggestionsVisible] = useState<boolean>(false);
 
   const searchWikipedia = async () => {
     if (!query.trim()) {
-      setError("Please enter a search term. WikiSearch is a browser based off of Wikipedia.");
+      setError("Please enter a search term.");
       setResult(null);
       return;
     }
@@ -59,20 +33,18 @@ const Home: React.FC = () => {
       const response = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
       );
-      const data: QueryResult = await response.json();
+      const data: any = await response.json();
 
-      // Check if data.query exists
       if (!data.query) {
-        setError("No results found. Try another search.");
+        setError("No results found.");
         return;
       }
 
       const pages = data.query.pages;
       const page = Object.values(pages)[0];
 
-      // TypeScript now knows that `page` can have `missing`, `title`, `extract`, etc.
       if (!page || page.missing) {
-        setError("No results found. Try another search.");
+        setError("No results found.");
       } else {
         setResult({
           title: page.title,
@@ -82,13 +54,12 @@ const Home: React.FC = () => {
         });
       }
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch suggestions from Wikipedia API based on input query
   const fetchSuggestions = async (searchTerm: string) => {
     if (!searchTerm.trim()) {
       setSuggestions([]);
@@ -96,18 +67,20 @@ const Home: React.FC = () => {
       return;
     }
 
-    setIsSuggestionsVisible(true); // Show suggestions when there's a query
+    setIsSuggestionsVisible(true);
     try {
       const response = await fetch(
         `https://en.wikipedia.org/w/api.php?action=opensearch&format=json&origin=*&search=${searchTerm}`
       );
-      const data: SuggestionResult = await response.json();
+      const data: any = await response.json();
 
-      // Process the data into the format you provided
-      const processedSuggestions = data.query.title.map((title, index) => ({
+      const titles = data[1]; // Titles are at index 1
+      const urls = data[3];   // URLs are at index 3
+
+      // Process titles and URLs into a usable format
+      const processedSuggestions = titles.map((title: string, index: number) => ({
         title,
-        url: data.query.url[index],
-        description: data.query.description[index] || "No description available", // Fallback for missing descriptions
+        url: urls[index] || "",
       }));
 
       setSuggestions(processedSuggestions);
@@ -130,14 +103,14 @@ const Home: React.FC = () => {
     const newQuery = e.target.value;
     setQuery(newQuery);
     if (isLandingPage) {
-      setIsLandingPage(false); // Hide landing page once user starts typing
+      setIsLandingPage(false);
     }
-    fetchSuggestions(newQuery); // Fetch suggestions as the user types
+    fetchSuggestions(newQuery);
   };
 
   const handleSuggestionClick = (title: string) => {
-    setQuery(title); // Set the clicked suggestion as query
-    setIsSuggestionsVisible(false); // Hide suggestions after selection
+    setQuery(title);
+    setIsSuggestionsVisible(false);
   };
 
   return (
@@ -149,11 +122,6 @@ const Home: React.FC = () => {
         <div className="h-full w-full max-w-screen-lg bg-white shadow-lg rounded-lg flex flex-col mx-auto">
           {/* Title Bar */}
           <div className="bg-gray-200 px-4 py-2 flex items-center justify-between border-b border-gray-300">
-            <div className="flex space-x-2">
-              <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-              <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
-              <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-            </div>
             <h1 className="font-semibold text-black">WikiBrowse</h1>
           </div>
 
@@ -180,7 +148,7 @@ const Home: React.FC = () => {
                   <li
                     key={index}
                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => handleSuggestionClick(suggestion.title)} // Set the clicked suggestion as query
+                    onClick={() => handleSuggestionClick(suggestion.title)} // Set clicked suggestion as query
                   >
                     <a
                       href={suggestion.url}
@@ -188,9 +156,8 @@ const Home: React.FC = () => {
                       rel="noopener noreferrer"
                       className="text-blue-500"
                     >
-                      <strong>{suggestion.title}</strong>
+                      {suggestion.title}
                     </a>
-                    <p className="text-sm text-gray-600">{suggestion.description}</p>
                   </li>
                 ))}
               </ul>
@@ -228,23 +195,21 @@ const Home: React.FC = () => {
                       <Image
                         src={result.image}
                         alt={result.title}
-                        width={500} // Define width
-                        height={300} // Define height
+                        width={500}
+                        height={300}
                         className="w-full h-auto mb-4 rounded-lg"
                       />
                     )}
                     <h2 className="text-2xl font-bold text-black">{result.title}</h2>
                     <div
                       className="mt-2 text-black"
-                      dangerouslySetInnerHTML={{ __html: result.extract }} // Render the extract as HTML
+                      dangerouslySetInnerHTML={{ __html: result.extract }}
                     />
                   </div>
 
                   {/* References */}
                   <div className="border-l pl-6">
-                    <h3 className="text-lg font-semibold mb-4 text-black">
-                      References:
-                    </h3>
+                    <h3 className="text-lg font-semibold mb-4 text-black">References:</h3>
                     {result.references.length > 0 ? (
                       <ul className="space-y-2">
                         {result.references.map((ref, index) => (

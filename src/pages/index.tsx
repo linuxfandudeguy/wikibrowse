@@ -87,8 +87,8 @@ const Home: React.FC = () => {
       <Head>
         <title>WikiBrowse</title>
       </Head>
-      <div className="min-h-screen w-full bg-gray-900">
-        <div className="min-h-screen w-full max-w-screen-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col mx-auto">
+      <div className="h-screen w-screen bg-gray-900">
+        <div className="h-full w-full max-w-screen-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col mx-auto">
           {/* Title Bar */}
           <div className="bg-gray-200 dark:bg-gray-700 px-4 py-2 flex items-center justify-between border-b border-gray-300 dark:border-gray-600">
             <div className="flex space-x-2">
@@ -119,31 +119,47 @@ const Home: React.FC = () => {
           {/* Landing Page Content */}
           {isLandingPage && (
             <div className="flex-grow p-6 text-center">
-              <h2 className="text-2xl font-bold text-black dark:text-white mb-4">
-                Welcome to WikiBrowse!
-              </h2>
+              <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Welcome to WikiBrowse!</h2>
               <p className="text-black dark:text-white mb-4">
-                WikiBrowse is a minimalist browser based on Wikipedia.
+                WikiBrowse is a browser based off of Wikipedia that helps you find information quickly.
               </p>
-              <p className="text-black dark:text-white mb-4">
-                Try one of these search terms to get started:
-              </p>
+              <p className="text-black dark:text-white mb-4">Start by typing a search term or try one of these example search terms:</p>
               <ul className="list-disc text-left mx-auto space-y-2 max-w-sm">
-                <li>Albert Einstein</li>
-                <li>Great Wall of China</li>
-                <li>JavaScript</li>
-                <li>Mount Everest</li>
-                <li>Wikipedia</li>
-                <li>Tailwind CSS</li>
-                <li>TypeScript</li>
-                <li>Next.js</li>
-                <li>Vercel</li>
-                <li>Github</li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  Albert Einstein
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  Great Wall of China
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  JavaScript
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  Mount Everest
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  Wikipedia
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  Tailwind CSS
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  TypeScript
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  Next.js
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  Vercel
+                </li>
+                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  Github
+                </li>
               </ul>
             </div>
           )}
 
-          {/* Search Results */}
+          {/* Results */}
           {!isLandingPage && (
             <div className="flex-grow p-6 overflow-y-auto">
               {loading && <p className="text-center text-gray-500">Loading...</p>}
@@ -183,7 +199,7 @@ const Home: React.FC = () => {
                             href={ref["*"]}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 break-words"
+                            className="text-blue-500"
                           >
                             <span className="font-bold">{ref["*"]}</span>
                           </a>

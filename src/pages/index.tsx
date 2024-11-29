@@ -9,7 +9,7 @@ interface Thumbnail {
 
 interface Page {
   title: string;
-  extract: string;
+  extract: string; // This will now include raw HTML
   thumbnail?: Thumbnail;
   missing?: boolean; // The missing property exists on a page if the page doesn't exist
   extlinks?: { "*": string }[];
@@ -46,7 +46,7 @@ const Home: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&explaintext=1&pithumbsize=500`
+        `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
       );
       const data: QueryResult = await response.json();
 
@@ -164,7 +164,10 @@ const Home: React.FC = () => {
                       />
                     )}
                     <h2 className="text-2xl font-bold text-black">{result.title}</h2>
-                    <p className="mt-2 text-black">{result.extract}</p>
+                    <div
+                      className="mt-2 text-black"
+                      dangerouslySetInnerHTML={{ __html: result.extract }} // Render the extract as HTML
+                    />
                   </div>
 
                   {/* References */}

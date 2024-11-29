@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Geist';
+  src: url('../pages/fonts/GeistVF.woff') format('woff');
+}
+
+body {
+  font-family: 'Geist', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  color: black;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: 'Geist', sans-serif;
+  cursor: pointer;
+}
+
+input, textarea {
+  font-family: 'Geist', sans-serif;
+}

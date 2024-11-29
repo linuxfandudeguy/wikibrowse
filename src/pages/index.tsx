@@ -19,6 +19,12 @@ interface QueryResult {
   query?: { pages: Record<string, Page> }; // Make the query property optional
 }
 
+interface SuggestionResult {
+  query: {
+    search: { title: string }[];
+  };
+}
+
 interface SearchResult {
   title: string;
   extract: string;
@@ -32,6 +38,8 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
+  const [suggestions, setSuggestions] = useState<string[]>([]); // Store suggestions
+  const [isSuggestionsLoading, setIsSuggestionsLoading] = useState<boolean>(false); // Loading state for suggestions
 
   const searchWikipedia = async () => {
     if (!query.trim()) {
@@ -77,6 +85,27 @@ const Home: React.FC = () => {
     }
   };
 
+  // Fetch suggestions from Wikipedia API based on input query
+  const fetchSuggestions = async (searchTerm: string) => {
+    if (!searchTerm.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    setIsSuggestionsLoading(true);
+    try {
+      const response = await fetch(
+        `https://en.wikipedia.org/w/api.php?action=opensearch&format=json&origin=*&search=${searchTerm}`
+      );
+      const data: SuggestionResult = await response.json();
+      setSuggestions(data.query.search.map((suggestion) => suggestion.title));
+    } catch {
+      setSuggestions([]);
+    } finally {
+      setIsSuggestionsLoading(false);
+    }
+  };
+
   const formatURL = (url: string): string => {
     try {
       const hostname = new URL(url).hostname;
@@ -87,10 +116,12 @@ const Home: React.FC = () => {
   };
 
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+    const newQuery = e.target.value;
+    setQuery(newQuery);
     if (isLandingPage) {
       setIsLandingPage(false); // Hide landing page once user starts typing
     }
+    fetchSuggestions(newQuery); // Fetch suggestions as the user types
   };
 
   return (
@@ -111,7 +142,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="flex items-center px-6 py-4 border-b border-gray-300">
+          <div className="relative flex items-center px-6 py-4 border-b border-gray-300">
             <input
               type="text"
               className="flex-grow border rounded-lg px-4 py-2"
@@ -125,6 +156,24 @@ const Home: React.FC = () => {
             >
               Search
             </button>
+
+            {/* Autofill Suggestions */}
+            {query && suggestions.length > 0 && !isSuggestionsLoading && (
+              <ul className="absolute bg-white border w-full mt-2 max-h-60 overflow-y-auto shadow-lg z-10">
+                {suggestions.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => setQuery(suggestion)} // Set the clicked suggestion as query
+                  >
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {isSuggestionsLoading && (
+              <p className="absolute text-center w-full mt-2 text-gray-500">Loading suggestions...</p>
+            )}
           </div>
 
           {/* Landing Page Content */}
@@ -132,7 +181,7 @@ const Home: React.FC = () => {
             <div className="flex-grow p-6 text-center">
               <h2 className="text-2xl font-bold text-black mb-4">Welcome to WikiBrowse!</h2>
               <p className="text-black mb-4">
-                WikiBrowsr is a browser based off of Wikipedia that helps you find information quickly.
+                WikiBrowse is a browser based off of Wikipedia that helps you find information quickly.
               </p>
               <p className="text-black mb-4">Start by typing a search term or try one of these example search terms:</p>
               <ul className="list-disc text-left mx-auto space-y-2 max-w-sm">

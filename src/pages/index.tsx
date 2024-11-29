@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image"; // Import the Image component
 
@@ -20,7 +20,6 @@ interface QueryResult {
 }
 
 interface SuggestionResult {
-  // Using the exact format you provided
   query: {
     search: string[];
     title: string[];
@@ -42,7 +41,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
-  const [suggestions, setSuggestions] = useState<{ title: string; url: string }[]>([]); // Store suggestions
+  const [suggestions, setSuggestions] = useState<{ title: string; url: string; description: string }[]>([]); // Store suggestions
   const [isSuggestionsVisible, setIsSuggestionsVisible] = useState<boolean>(false); // To show/hide suggestions
 
   const searchWikipedia = async () => {
@@ -108,6 +107,7 @@ const Home: React.FC = () => {
       const processedSuggestions = data.query.title.map((title, index) => ({
         title,
         url: data.query.url[index],
+        description: data.query.description[index] || "No description available", // Fallback for missing descriptions
       }));
 
       setSuggestions(processedSuggestions);
@@ -188,8 +188,9 @@ const Home: React.FC = () => {
                       rel="noopener noreferrer"
                       className="text-blue-500"
                     >
-                      {suggestion.title}
+                      <strong>{suggestion.title}</strong>
                     </a>
+                    <p className="text-sm text-gray-600">{suggestion.description}</p>
                   </li>
                 ))}
               </ul>
@@ -244,23 +245,24 @@ const Home: React.FC = () => {
                     <h3 className="text-lg font-semibold mb-4 text-black">
                       References:
                     </h3>
-                    <ul className="space-y-4">
-                      {result.references.map((ref, index) => (
-                        <li
-                          key={index}
-                          className="p-4 border rounded-lg hover:shadow-lg transition"
-                        >
-                          <a
-                            href={ref["*"]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500"
-                          >
-                            <span className="font-bold">{formatURL(ref["*"])}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
+                    {result.references.length > 0 ? (
+                      <ul className="space-y-2">
+                        {result.references.map((ref, index) => (
+                          <li key={index}>
+                            <a
+                              href={ref["*"]}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500"
+                            >
+                              {formatURL(ref["*"])}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No references found.</p>
+                    )}
                   </div>
                 </div>
               )}

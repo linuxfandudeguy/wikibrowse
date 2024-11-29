@@ -1,6 +1,7 @@
 import { useState } from "react";
-import Head from "next/head"; // import head components 
-import Image from "next/image"; // Import the Image component
+import Head from "next/head";
+import Image from "next/image";
+import ThemeToggle from '../components/ThemeToggle'; // Import the ThemeToggle component
 
 // Define types for the API response
 interface Thumbnail {
@@ -98,23 +99,25 @@ const Home: React.FC = () => {
       <Head>
         <title>WikiBrowse</title>
       </Head>
-      <div className="h-screen w-screen bg-gray-100">
-        <div className="h-full w-full max-w-screen-lg bg-white shadow-lg rounded-lg flex flex-col mx-auto">
+      <div className="h-screen w-screen bg-gray-100 dark:bg-gray-900">
+        <div className="h-full w-full max-w-screen-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col mx-auto">
           {/* Title Bar */}
-          <div className="bg-gray-200 px-4 py-2 flex items-center justify-between border-b border-gray-300">
+          <div className="bg-gray-200 dark:bg-gray-700 px-4 py-2 flex items-center justify-between border-b border-gray-300 dark:border-gray-600">
             <div className="flex space-x-2">
               <span className="w-3 h-3 bg-red-500 rounded-full"></span>
               <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
               <span className="w-3 h-3 bg-green-500 rounded-full"></span>
             </div>
-            <h1 className="font-semibold text-black">WikiBrowse</h1>
+            <h1 className="font-semibold text-black dark:text-white">WikiBrowse</h1>
+            {/* Theme Toggle */}
+            <ThemeToggle />
           </div>
 
           {/* Search Bar */}
-          <div className="flex items-center px-6 py-4 border-b border-gray-300">
+          <div className="flex items-center px-6 py-4 border-b border-gray-300 dark:border-gray-600">
             <input
               type="text"
-              className="flex-grow border rounded-lg px-4 py-2"
+              className="flex-grow border rounded-lg px-4 py-2 dark:bg-gray-700 dark:text-white"
               placeholder="Enter a search term"
               value={query}
               onChange={handleSearchInput}
@@ -130,12 +133,12 @@ const Home: React.FC = () => {
           {/* Landing Page Content */}
           {isLandingPage && (
             <div className="flex-grow p-6 text-center">
-              <h2 className="text-2xl font-bold text-black mb-4">Welcome to WikiBrowse!</h2>
-              <p className="text-black mb-4">
-                WikiBrowsr is a browser based off of Wikipedia that helps you find information quickly.
+              <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Welcome to WikiBrowse!</h2>
+              <p className="text-black dark:text-white mb-4">
+                WikiBrowse is a browser based off of Wikipedia that helps you find information quickly.
               </p>
-              <p className="text-black mb-4">Start by typing a search term or try one of these example search terms:</p>
-              <ul className="list-disc text-left mx-auto space-y-2 max-w-sm">
+              <p className="text-black dark:text-white mb-4">Start by typing a search term or try one of these example search terms:</p>
+              <ul className="list-disc text-left mx-auto space-y-2 max-w-sm text-black dark:text-white">
                 <li>Albert Einstein</li>
                 <li>Great Wall of China</li>
                 <li>JavaScript</li>
@@ -158,49 +161,18 @@ const Home: React.FC = () => {
                       <Image
                         src={result.image}
                         alt={result.title}
-                        width={500} // Define width
-                        height={300} // Define height
+                        width={500}
+                        height={300}
                         className="w-full h-auto mb-4 rounded-lg"
                       />
                     )}
-                    <h2 className="text-2xl font-bold text-black">{result.title}</h2>
+                    <h2 className="text-2xl font-bold text-black dark:text-white">{result.title}</h2>
                     <div
-                      className="mt-2 text-black"
-                      dangerouslySetInnerHTML={{ __html: result.extract }} // Render the extract as HTML
+                      className="mt-2 text-black dark:text-white"
+                      dangerouslySetInnerHTML={{ __html: result.extract }}
                     />
                   </div>
 
                   {/* References */}
                   <div className="border-l pl-6">
-                    <h3 className="text-lg font-semibold mb-4 text-black">
-                      References:
-                    </h3>
-                    <ul className="space-y-4">
-                      {result.references.map((ref, index) => (
-                        <li
-                          key={index}
-                          className="p-4 border rounded-lg hover:shadow-lg transition"
-                        >
-                          <a
-                            href={ref["*"]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500"
-                          >
-                            <span className="font-bold">{formatURL(ref["*"])}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default Home;
+                    <h3 className="text-lg font-semibold mb-4 text-black dark

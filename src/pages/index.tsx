@@ -19,17 +19,23 @@ interface QueryResult {
   query?: { pages: Record<string, Page> }; // Make the query property optional
 }
 
+interface SearchResult {
+  title: string;
+  extract: string;
+  image: string | null;
+  references: { ["*"]: string }[];
+}
+
 const Home: React.FC = () => {
   const [query, setQuery] = useState<string>("");
-  const [result, setResult] = useState<any | null>(null);
+  const [result, setResult] = useState<SearchResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
 
-  // Search Wikipedia API
   const searchWikipedia = async () => {
     if (!query.trim()) {
-      setError("Please enter a search term.");
+      setError("Please enter a search term. WikiSearch is a browser based off of Wikipedia.");
       setResult(null);
       return;
     }
@@ -42,19 +48,20 @@ const Home: React.FC = () => {
       const response = await fetch(
         `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
       );
-      const data: any = await response.json();
+      const data: QueryResult = await response.json();
 
+      // Check if data.query exists
       if (!data.query) {
-        setError("No results found.");
+        setError("No results found. Try another search.");
         return;
       }
 
       const pages = data.query.pages;
       const page = Object.values(pages)[0];
 
-      // Check for page existence and handle missing pages
-      if (!page || page.hasOwnProperty("missing")) {
-        setError("No results found.");
+      // TypeScript now knows that `page` can have `missing`, `title`, `extract`, etc.
+      if (!page || page.missing) {
+        setError("No results found. Try another search.");
       } else {
         setResult({
           title: page.title,
@@ -64,7 +71,7 @@ const Home: React.FC = () => {
         });
       }
     } catch {
-      setError("Something went wrong.");
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -80,8 +87,7 @@ const Home: React.FC = () => {
   };
 
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuery = e.target.value;
-    setQuery(newQuery);
+    setQuery(e.target.value);
     if (isLandingPage) {
       setIsLandingPage(false); // Hide landing page once user starts typing
     }
@@ -90,7 +96,7 @@ const Home: React.FC = () => {
   return (
     <>
       <Head>
-        <title>WikiBrowse</title>
+        <title>WikiSearch</title>
       </Head>
       <div className="h-screen w-screen bg-gray-100">
         <div className="h-full w-full max-w-screen-lg bg-white shadow-lg rounded-lg flex flex-col mx-auto">
@@ -105,7 +111,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="relative flex items-center px-6 py-4 border-b border-gray-300">
+          <div className="flex items-center px-6 py-4 border-b border-gray-300">
             <input
               type="text"
               className="flex-grow border rounded-lg px-4 py-2"
@@ -126,7 +132,7 @@ const Home: React.FC = () => {
             <div className="flex-grow p-6 text-center">
               <h2 className="text-2xl font-bold text-black mb-4">Welcome to WikiBrowse!</h2>
               <p className="text-black mb-4">
-                WikiBrowse is a browser based off of Wikipedia that helps you find information quickly.
+                WikiBrowsr is a browser based off of Wikipedia that helps you find information quickly.
               </p>
               <p className="text-black mb-4">Start by typing a search term or try one of these example search terms:</p>
               <ul className="list-disc text-left mx-auto space-y-2 max-w-sm">

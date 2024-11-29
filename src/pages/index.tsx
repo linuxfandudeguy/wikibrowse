@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import ThemeToggle from '../components/ThemeToggle'; // Import the ThemeToggle component
 
+
 // Define types for the API response
 interface Thumbnail {
   source: string;
@@ -10,14 +11,14 @@ interface Thumbnail {
 
 interface Page {
   title: string;
-  extract: string; // This will now include raw HTML
+  extract: string;
   thumbnail?: Thumbnail;
-  missing?: boolean; // The missing property exists on a page if the page doesn't exist
+  missing?: boolean;
   extlinks?: { "*": string }[];
 }
 
 interface QueryResult {
-  query?: { pages: Record<string, Page> }; // Make the query property optional
+  query?: { pages: Record<string, Page> };
 }
 
 interface SearchResult {
@@ -36,7 +37,7 @@ const Home: React.FC = () => {
 
   const searchWikipedia = async () => {
     if (!query.trim()) {
-      setError("Please enter a search term. WikiBrowse is a browser based off of Wikipedia.");
+      setError("Please enter a search term.");
       setResult(null);
       return;
     }
@@ -51,18 +52,16 @@ const Home: React.FC = () => {
       );
       const data: QueryResult = await response.json();
 
-      // Check if data.query exists
       if (!data.query) {
-        setError("No results found. Try another search.");
+        setError("No results found.");
         return;
       }
 
       const pages = data.query.pages;
       const page = Object.values(pages)[0];
 
-      // TypeScript now knows that `page` can have `missing`, `title`, `extract`, etc.
       if (!page || page.missing) {
-        setError("No results found. Try another search.");
+        setError("No results found.");
       } else {
         setResult({
           title: page.title,
@@ -75,15 +74,6 @@ const Home: React.FC = () => {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const formatURL = (url: string): string => {
-    try {
-      const hostname = new URL(url).hostname;
-      return hostname.replace(/^www\./, "");
-    } catch {
-      return url;
     }
   };
 
@@ -109,7 +99,7 @@ const Home: React.FC = () => {
               <span className="w-3 h-3 bg-green-500 rounded-full"></span>
             </div>
             <h1 className="font-semibold text-black dark:text-white">WikiBrowse</h1>
-            {/* Theme Toggle */}
+            {/* Theme Toggle Component */}
             <ThemeToggle />
           </div>
 
@@ -117,7 +107,7 @@ const Home: React.FC = () => {
           <div className="flex items-center px-6 py-4 border-b border-gray-300 dark:border-gray-600">
             <input
               type="text"
-              className="flex-grow border rounded-lg px-4 py-2 dark:bg-gray-700 dark:text-white"
+              className="flex-grow border rounded-lg px-4 py-2 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter a search term"
               value={query}
               onChange={handleSearchInput}
@@ -129,24 +119,6 @@ const Home: React.FC = () => {
               Search
             </button>
           </div>
-
-          {/* Landing Page Content */}
-          {isLandingPage && (
-            <div className="flex-grow p-6 text-center">
-              <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Welcome to WikiBrowse!</h2>
-              <p className="text-black dark:text-white mb-4">
-                WikiBrowse is a browser based off of Wikipedia that helps you find information quickly.
-              </p>
-              <p className="text-black dark:text-white mb-4">Start by typing a search term or try one of these example search terms:</p>
-              <ul className="list-disc text-left mx-auto space-y-2 max-w-sm text-black dark:text-white">
-                <li>Albert Einstein</li>
-                <li>Great Wall of China</li>
-                <li>JavaScript</li>
-                <li>Mount Everest</li>
-                <li>Wikipedia</li>
-              </ul>
-            </div>
-          )}
 
           {/* Results */}
           {!isLandingPage && (
@@ -190,7 +162,7 @@ const Home: React.FC = () => {
                             rel="noopener noreferrer"
                             className="text-blue-500"
                           >
-                            <span className="font-bold">{formatURL(ref["*"])}</span>
+                            <span className="font-bold">{ref["*"]}</span>
                           </a>
                         </li>
                       ))}

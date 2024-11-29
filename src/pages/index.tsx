@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Head from "next/head";
+import Head from "next/head"; // import head components 
 import Image from "next/image"; // Import the Image component
 
 // Define types for the API response

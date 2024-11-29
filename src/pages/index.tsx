@@ -47,7 +47,7 @@ const Home: React.FC = () => {
 
   const searchWikipedia = async () => {
     if (!query.trim()) {
-      setError("Please enter a search term. WikiSearch is a browser based off of Wikipedia.");
+      setError("Please enter a search term. WikiBrowse is a browser based off of Wikipedia.");
       setResult(null);
       return;
     }
@@ -138,7 +138,7 @@ const Home: React.FC = () => {
   return (
     <>
       <Head>
-        <title>WikiSearch</title>
+        <title>WikiBrowse</title>
       </Head>
       <div className="h-screen w-screen bg-gray-100">
         <div className="h-full w-full max-w-screen-lg bg-white shadow-lg rounded-lg flex flex-col mx-auto">
@@ -177,7 +177,14 @@ const Home: React.FC = () => {
                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
                     onClick={() => setQuery(suggestion.title)} // Set the clicked suggestion as query
                   >
-                    {suggestion.title}
+                    <a
+                      href={suggestion.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500"
+                    >
+                      {suggestion.title}
+                    </a>
                   </li>
                 ))}
               </ul>

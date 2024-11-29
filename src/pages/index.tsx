@@ -172,7 +172,7 @@ const Home: React.FC = () => {
 
                   {/* References */}
                   <div className="border-l pl-6">
-                    <h3 className="text-lg font-semibold mb-4 text-white">References:</h3>
+                    <h3 className="text-lg font-semibold mb-4 text-white">Results:</h3>
                     <ul className="space-y-4">
                       {result.references.map((ref, index) => (
                         <li

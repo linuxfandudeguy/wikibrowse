@@ -82,28 +82,41 @@ const Home: React.FC = () => {
     }
   };
 
+  const exampleSearchTerms = [
+    "Albert Einstein",
+    "Great Wall of China",
+    "JavaScript",
+    "Mount Everest",
+    "Wikipedia",
+    "Tailwind CSS",
+    "TypeScript",
+    "Next.js",
+    "Vercel",
+    "Github",
+  ];
+
   return (
     <>
       <Head>
         <title>WikiBrowse</title>
       </Head>
       <div className="h-screen w-screen bg-gray-900">
-        <div className="h-full w-full max-w-screen-lg bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col mx-auto">
+        <div className="h-full w-full max-w-screen-lg bg-gray-800 shadow-lg rounded-lg flex flex-col mx-auto">
           {/* Title Bar */}
-          <div className="bg-gray-200 dark:bg-gray-700 px-4 py-2 flex items-center justify-between border-b border-gray-300 dark:border-gray-600">
+          <div className="bg-gray-700 px-4 py-2 flex items-center justify-between border-b border-gray-600">
             <div className="flex space-x-2">
               <span className="w-3 h-3 bg-red-500 rounded-full"></span>
               <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
               <span className="w-3 h-3 bg-green-500 rounded-full"></span>
             </div>
-            <h1 className="font-semibold text-black dark:text-white">WikiBrowse</h1>
+            <h1 className="font-semibold text-white">WikiBrowse</h1>
           </div>
 
           {/* Search Bar */}
-          <div className="flex items-center px-6 py-4 border-b border-gray-300 dark:border-gray-600">
+          <div className="flex items-center px-6 py-4 border-b border-gray-600">
             <input
               type="text"
-              className="flex-grow border rounded-lg px-4 py-2 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-grow border rounded-lg px-4 py-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter a search term"
               value={query}
               onChange={handleSearchInput}
@@ -119,42 +132,15 @@ const Home: React.FC = () => {
           {/* Landing Page Content */}
           {isLandingPage && (
             <div className="flex-grow p-6 text-center">
-              <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Welcome to WikiBrowse!</h2>
-              <p className="text-black dark:text-white mb-4">
+              <h2 className="text-2xl font-bold text-white mb-4">Welcome to WikiBrowse!</h2>
+              <p className="text-white mb-4">
                 WikiBrowse is a browser based off of Wikipedia that helps you find information quickly.
               </p>
-              <p className="text-black dark:text-white mb-4">Start by typing a search term or try one of these example search terms:</p>
+              <p className="text-white mb-4">Start by typing a search term or try one of these example search terms:</p>
               <ul className="list-disc text-left mx-auto space-y-2 max-w-sm">
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  Albert Einstein
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  Great Wall of China
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  JavaScript
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  Mount Everest
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  Wikipedia
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  Tailwind CSS
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  TypeScript
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  Next.js
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  Vercel
-                </li>
-                <li className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  Github
-                </li>
+                {exampleSearchTerms.map((term, index) => (
+                  <li key={index} className="text-white">{term}</li>
+                ))}
               </ul>
             </div>
           )}
@@ -177,18 +163,16 @@ const Home: React.FC = () => {
                         className="w-full h-auto mb-4 rounded-lg"
                       />
                     )}
-                    <h2 className="text-2xl font-bold text-black dark:text-white">{result.title}</h2>
+                    <h2 className="text-2xl font-bold text-white">{result.title}</h2>
                     <div
-                      className="mt-2 text-black dark:text-white"
+                      className="mt-2 text-white"
                       dangerouslySetInnerHTML={{ __html: result.extract }}
                     />
                   </div>
 
                   {/* References */}
                   <div className="border-l pl-6">
-                    <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">
-                      References:
-                    </h3>
+                    <h3 className="text-lg font-semibold mb-4 text-white">References:</h3>
                     <ul className="space-y-4">
                       {result.references.map((ref, index) => (
                         <li
@@ -199,7 +183,7 @@ const Home: React.FC = () => {
                             href={ref["*"]}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500"
+                            className="text-blue-500 break-words"
                           >
                             <span className="font-bold">{ref["*"]}</span>
                           </a>

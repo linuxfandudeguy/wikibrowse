@@ -27,12 +27,10 @@ const LanguagePicker: React.FC<LanguagePickerProps> = ({ language, setLanguage }
     { code: "fa", label: "فارسی (Persian)" },
     { code: "sv", label: "Svenska (Swedish)" },
     { code: "fi", label: "Suomi (Finnish)" },
-    // Add more languages as needed
   ];
 
   return (
     <div className="flex items-center space-x-2 text-white">
-      <span className="font-semibold">Language:</span>
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value)}

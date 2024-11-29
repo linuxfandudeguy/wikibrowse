@@ -78,7 +78,8 @@ const Home: React.FC = () => {
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
     if (isLandingPage) {
-      setIsLandingPage(false); 
+      setIsLandingPage(false); // Hide landing page once user starts typing
+    }
   };
 
   return (

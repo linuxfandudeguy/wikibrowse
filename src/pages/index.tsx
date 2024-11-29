@@ -175,4 +175,35 @@ const Home: React.FC = () => {
 
                   {/* References */}
                   <div className="border-l pl-6">
-                    <h3 className="text-lg font-semibold mb-4 text-black dark
+                    <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">
+                      References:
+                    </h3>
+                    <ul className="space-y-4">
+                      {result.references.map((ref, index) => (
+                        <li
+                          key={index}
+                          className="p-4 border rounded-lg hover:shadow-lg transition"
+                        >
+                          <a
+                            href={ref["*"]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500"
+                          >
+                            <span className="font-bold">{formatURL(ref["*"])}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Home;

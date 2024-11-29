@@ -52,7 +52,7 @@ To run WikiBrowse locally, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/wikibrowse.git
+   git clone https://github.com/linuxfandudeguy/wikibrowse.git
    cd wikibrowse
    ```
 
@@ -61,6 +61,10 @@ To run WikiBrowse locally, follow these steps:
    npm install
    # or
    yarn install
+   # or
+   pnpm install
+   # or (most recommended)
+   bun install
    ```
 
 3. Run the development server:
@@ -68,6 +72,10 @@ To run WikiBrowse locally, follow these steps:
    npm run dev
    # or
    yarn dev
+   # or
+   pnpm dev
+   # or (most recommended)
+   bun dev
    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser to see WikiBrowse in action.
@@ -75,7 +83,7 @@ To run WikiBrowse locally, follow these steps:
 ## Dissecting the Architecture
 
 ### 1. **Pages Directory (Frontend)**
-   - **`pages/index.tsx`**:  
+   - **`src/pages/index.tsx`**:  
      The homepage where users can enter search queries. It displays the search bar and dynamically renders the results fetched from the Wikipedia API.
    
    - **Dynamic Insertion**:  

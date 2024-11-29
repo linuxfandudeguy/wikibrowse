@@ -107,7 +107,7 @@ const Home: React.FC = () => {
               <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
               <span className="w-3 h-3 bg-green-500 rounded-full"></span>
             </div>
-            <h1 className="font-semibold text-black">WikiSearch</h1>
+            <h1 className="font-semibold text-black">WikiBrowse</h1>
           </div>
 
           {/* Search Bar */}
@@ -130,14 +130,14 @@ const Home: React.FC = () => {
           {/* Landing Page Content */}
           {isLandingPage && (
             <div className="flex-grow p-6 text-center">
-              <h2 className="text-2xl font-bold text-black mb-4">Welcome to WikiSearch!</h2>
+              <h2 className="text-2xl font-bold text-black mb-4">Welcome to WikiBrowse!</h2>
               <p className="text-black mb-4">
-                WikiSearch is a browser based off of Wikipedia that helps you find information quickly.
+                WikiBrowsr is a browser based off of Wikipedia that helps you find information quickly.
               </p>
               <p className="text-black mb-4">Start by typing a search term or try one of these example search terms:</p>
               <ul className="list-disc text-left mx-auto space-y-2 max-w-sm">
                 <li>Albert Einstein</li>
-                <li>The Great Wall of China</li>
+                <li>Great Wall of China</li>
                 <li>JavaScript</li>
                 <li>Mount Everest</li>
                 <li>Wikipedia</li>

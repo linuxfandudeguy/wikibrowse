@@ -91,6 +91,11 @@ const Home: React.FC = () => {
         <div className="h-full w-full max-w-screen-lg bg-gray-800 shadow-lg rounded-lg flex flex-col mx-auto">
           {/* Title Bar */}
           <div className="bg-gray-700 px-4 py-2 flex items-center justify-between border-b border-gray-600">
+            <div className="flex space-x-2">
+              <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+              <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+              <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+            </div>
             <h1 className="font-semibold text-white">WikiBrowse</h1>
           </div>
 
@@ -125,6 +130,11 @@ const Home: React.FC = () => {
                 <li>JavaScript</li>
                 <li>Mount Everest</li>
                 <li>Wikipedia</li>
+                <li>Tailwind CSS</li>
+                <li>TypeScript</li>
+                <li>Next.js</li>
+                <li>Vercel</li>
+                <li>Github</li>
               </ul>
             </div>
           )}

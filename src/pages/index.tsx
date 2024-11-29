@@ -20,8 +20,12 @@ interface QueryResult {
 }
 
 interface SuggestionResult {
+  // Using the exact format you provided
   query: {
-    search: { title: string }[];
+    search: string[];
+    title: string[];
+    description: string[];
+    url: string[];
   };
 }
 
@@ -38,7 +42,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
-  const [suggestions, setSuggestions] = useState<string[]>([]); // Store suggestions
+  const [suggestions, setSuggestions] = useState<{ title: string; url: string }[]>([]); // Store suggestions
   const [isSuggestionsLoading, setIsSuggestionsLoading] = useState<boolean>(false); // Loading state for suggestions
 
   const searchWikipedia = async () => {
@@ -98,7 +102,14 @@ const Home: React.FC = () => {
         `https://en.wikipedia.org/w/api.php?action=opensearch&format=json&origin=*&search=${searchTerm}`
       );
       const data: SuggestionResult = await response.json();
-      setSuggestions(data.query.search.map((suggestion) => suggestion.title));
+
+      // Process the data into the format you provided
+      const processedSuggestions = data.query.search.map((_, index) => ({
+        title: data.query.title[index],
+        url: data.query.url[index],
+      }));
+
+      setSuggestions(processedSuggestions);
     } catch {
       setSuggestions([]);
     } finally {
@@ -164,9 +175,9 @@ const Home: React.FC = () => {
                   <li
                     key={index}
                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => setQuery(suggestion)} // Set the clicked suggestion as query
+                    onClick={() => setQuery(suggestion.title)} // Set the clicked suggestion as query
                   >
-                    {suggestion}
+                    {suggestion.title}
                   </li>
                 ))}
               </ul>

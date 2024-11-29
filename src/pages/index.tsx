@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image"; // Import the Image component
 
@@ -43,11 +43,11 @@ const Home: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
   const [suggestions, setSuggestions] = useState<{ title: string; url: string }[]>([]); // Store suggestions
-  const [isSuggestionsLoading, setIsSuggestionsLoading] = useState<boolean>(false); // Loading state for suggestions
+  const [isSuggestionsVisible, setIsSuggestionsVisible] = useState<boolean>(false); // To show/hide suggestions
 
   const searchWikipedia = async () => {
     if (!query.trim()) {
-      setError("Please enter a search term. WikiBrowse is a browser based off of Wikipedia.");
+      setError("Please enter a search term. WikiSearch is a browser based off of Wikipedia.");
       setResult(null);
       return;
     }
@@ -93,10 +93,11 @@ const Home: React.FC = () => {
   const fetchSuggestions = async (searchTerm: string) => {
     if (!searchTerm.trim()) {
       setSuggestions([]);
+      setIsSuggestionsVisible(false);
       return;
     }
 
-    setIsSuggestionsLoading(true);
+    setIsSuggestionsVisible(true); // Show suggestions when there's a query
     try {
       const response = await fetch(
         `https://en.wikipedia.org/w/api.php?action=opensearch&format=json&origin=*&search=${searchTerm}`
@@ -104,16 +105,15 @@ const Home: React.FC = () => {
       const data: SuggestionResult = await response.json();
 
       // Process the data into the format you provided
-      const processedSuggestions = data.query.search.map((_, index) => ({
-        title: data.query.title[index],
+      const processedSuggestions = data.query.title.map((title, index) => ({
+        title,
         url: data.query.url[index],
       }));
 
       setSuggestions(processedSuggestions);
     } catch {
       setSuggestions([]);
-    } finally {
-      setIsSuggestionsLoading(false);
+      setIsSuggestionsVisible(false);
     }
   };
 
@@ -135,10 +135,15 @@ const Home: React.FC = () => {
     fetchSuggestions(newQuery); // Fetch suggestions as the user types
   };
 
+  const handleSuggestionClick = (title: string) => {
+    setQuery(title); // Set the clicked suggestion as query
+    setIsSuggestionsVisible(false); // Hide suggestions after selection
+  };
+
   return (
     <>
       <Head>
-        <title>WikiBrowse</title>
+        <title>WikiSearch</title>
       </Head>
       <div className="h-screen w-screen bg-gray-100">
         <div className="h-full w-full max-w-screen-lg bg-white shadow-lg rounded-lg flex flex-col mx-auto">
@@ -169,13 +174,13 @@ const Home: React.FC = () => {
             </button>
 
             {/* Autofill Suggestions */}
-            {query && suggestions.length > 0 && !isSuggestionsLoading && (
+            {isSuggestionsVisible && suggestions.length > 0 && (
               <ul className="absolute bg-white border w-full mt-2 max-h-60 overflow-y-auto shadow-lg z-10">
                 {suggestions.map((suggestion, index) => (
                   <li
                     key={index}
                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => setQuery(suggestion.title)} // Set the clicked suggestion as query
+                    onClick={() => handleSuggestionClick(suggestion.title)} // Set the clicked suggestion as query
                   >
                     <a
                       href={suggestion.url}
@@ -188,9 +193,6 @@ const Home: React.FC = () => {
                   </li>
                 ))}
               </ul>
-            )}
-            {isSuggestionsLoading && (
-              <p className="absolute text-center w-full mt-2 text-gray-500">Loading suggestions...</p>
             )}
           </div>
 

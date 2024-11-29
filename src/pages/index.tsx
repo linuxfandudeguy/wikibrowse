@@ -35,7 +35,7 @@ const Home: React.FC = () => {
 
   const searchWikipedia = async () => {
     if (!query.trim()) {
-      setError("Please enter a search term. WikiSearch is a browser based off of Wikipedia.");
+      setError("Please enter a search term. WikiBrowse is a browser based off of Wikipedia.");
       setResult(null);
       return;
     }
@@ -96,7 +96,7 @@ const Home: React.FC = () => {
   return (
     <>
       <Head>
-        <title>WikiSearch</title>
+        <title>WikiBrowse</title>
       </Head>
       <div className="h-screen w-screen bg-gray-100">
         <div className="h-full w-full max-w-screen-lg bg-white shadow-lg rounded-lg flex flex-col mx-auto">

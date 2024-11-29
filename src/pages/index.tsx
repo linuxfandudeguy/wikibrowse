@@ -82,6 +82,19 @@ const Home: React.FC = () => {
     }
   };
 
+  const exampleSearchTerms = [
+    "Albert Einstein",
+    "Great Wall of China",
+    "JavaScript",
+    "Mount Everest",
+    "Wikipedia",
+    "Tailwind CSS",
+    "TypeScript",
+    "Next.js",
+    "Vercel",
+    "Github",
+  ];
+
   return (
     <>
       <Head>
@@ -103,7 +116,7 @@ const Home: React.FC = () => {
           <div className="flex items-center px-6 py-4 border-b border-gray-600">
             <input
               type="text"
-              className="flex-grow border rounded-lg px-4 py-2 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-grow border rounded-lg px-4 py-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter a search term"
               value={query}
               onChange={handleSearchInput}
@@ -118,30 +131,23 @@ const Home: React.FC = () => {
 
           {/* Landing Page Content */}
           {isLandingPage && (
-            <div className="flex-grow p-6 text-center text-white">
-              <h2 className="text-2xl font-bold mb-4">Welcome to WikiBrowse!</h2>
-              <p className="mb-4">
-                WikiBrowse is a minimalist browser built with Next.js that helps you explore Wikipedia articles. Simply type a search term to get started!
+            <div className="flex-grow p-6 text-center">
+              <h2 className="text-2xl font-bold text-white mb-4">Welcome to WikiBrowse!</h2>
+              <p className="text-white mb-4">
+                WikiBrowse is a browser based off of Wikipedia that helps you find information quickly.
               </p>
-              <p className="mb-4">Try searching for some of these topics:</p>
+              <p className="text-white mb-4">Start by typing a search term or try one of these example search terms:</p>
               <ul className="list-disc text-left mx-auto space-y-2 max-w-sm">
-                <li>Albert Einstein</li>
-                <li>Great Wall of China</li>
-                <li>JavaScript</li>
-                <li>Mount Everest</li>
-                <li>Wikipedia</li>
-                <li>Tailwind CSS</li>
-                <li>TypeScript</li>
-                <li>Next.js</li>
-                <li>Vercel</li>
-                <li>Github</li>
+                {exampleSearchTerms.map((term, index) => (
+                  <li key={index} className="text-white">{term}</li>
+                ))}
               </ul>
             </div>
           )}
 
-          {/* Search Results */}
+          {/* Results */}
           {!isLandingPage && (
-            <div className="flex-grow p-6 overflow-y-auto text-white">
+            <div className="flex-grow p-6 overflow-y-auto">
               {loading && <p className="text-center text-gray-500">Loading...</p>}
               {error && <p className="text-center text-red-500">{error}</p>}
               {result && (
@@ -157,24 +163,27 @@ const Home: React.FC = () => {
                         className="w-full h-auto mb-4 rounded-lg"
                       />
                     )}
-                    <h2 className="text-2xl font-bold">{result.title}</h2>
+                    <h2 className="text-2xl font-bold text-white">{result.title}</h2>
                     <div
-                      className="mt-2"
+                      className="mt-2 text-white"
                       dangerouslySetInnerHTML={{ __html: result.extract }}
                     />
                   </div>
 
                   {/* References */}
                   <div className="border-l pl-6">
-                    <h3 className="text-lg font-semibold mb-4">References:</h3>
+                    <h3 className="text-lg font-semibold mb-4 text-white">References:</h3>
                     <ul className="space-y-4">
                       {result.references.map((ref, index) => (
-                        <li key={index} className="p-4 border rounded-lg hover:shadow-lg transition">
+                        <li
+                          key={index}
+                          className="p-4 border rounded-lg hover:shadow-lg transition"
+                        >
                           <a
                             href={ref["*"]}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500"
+                            className="text-blue-500 break-words"
                           >
                             <span className="font-bold">{ref["*"]}</span>
                           </a>

@@ -1,47 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 
+// ThemeToggle Component
 const ThemeToggle: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
-  // Check if dark mode preference is saved in localStorage and apply it
+  // Load theme from localStorage on component mount
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
-      setIsDarkMode(true);
       document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
     } else {
-      setIsDarkMode(false);
       document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
     }
   }, []);
 
-  // Toggle the dark mode state
+  // Function to toggle between dark and light mode
   const toggleTheme = () => {
-    setIsDarkMode(prevState => {
-      const newState = !prevState;
-      // Persist theme in localStorage
-      localStorage.setItem("theme", newState ? "dark" : "light");
-      // Toggle the dark class on the document root
-      if (newState) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-      return newState;
-    });
+    if (isDarkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+    setIsDarkMode(!isDarkMode); // Toggle the state
   };
 
   return (
     <button
       onClick={toggleTheme}
-      className="px-4 py-2 rounded-full bg-gray-800 text-white"
-      aria-label="Toggle theme"
+      className="text-black dark:text-white p-2 bg-gray-300 rounded-full focus:outline-none"
     >
-      {isDarkMode ? (
-        <span className="text-lg">🌙</span> // Moon icon for dark mode
-      ) : (
-        <span className="text-lg">☀️</span> // Sun icon for light mode
-      )}
+      {isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
     </button>
   );
 };

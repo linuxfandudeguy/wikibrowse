@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
+import LanguagePicker from "../components/LanguagePicker"; // Import the LanguagePicker component
 
 // Define types for the API response
 interface Thumbnail {
@@ -32,6 +33,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
+  const [language, setLanguage] = useState<string>("en"); // State to track selected language
 
   const searchWikipedia = async () => {
     if (!query.trim()) {
@@ -46,7 +48,7 @@ const Home: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
+        `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
       );
       const data: QueryResult = await response.json();
 
@@ -112,6 +114,11 @@ const Home: React.FC = () => {
             <h1 className="font-semibold text-white">WikiBrowse</h1>
           </div>
 
+          {/* Language Picker */}
+          <div className="px-6 py-4 border-b border-gray-600">
+            <LanguagePicker language={language} setLanguage={setLanguage} />
+          </div>
+
           {/* Search Bar */}
           <div className="flex items-center px-6 py-4 border-b border-gray-600">
             <input
@@ -136,12 +143,12 @@ const Home: React.FC = () => {
               <p className="text-white mb-4">
                 WikiBrowse is a browser based off of Wikipedia that helps you find information quickly.
               </p>
-              <p className="text-white mb-4">Start by typing a search term or try one of these example search terms:</p>
-              <ul className="list-disc text-left mx-auto space-y-2 max-w-sm">
-                {exampleSearchTerms.map((term, index) => (
-                  <li key={index} className="text-white">{term}</li>
-                ))}
-              </ul>
+              <p className="text-white mb-4">
+                Start by typing a search term or try one of these example search terms:
+              </p>
+              <p className="text-white mb-4">
+                {exampleSearchTerms.join(" • ")}
+              </p>
             </div>
           )}
 
@@ -175,10 +182,7 @@ const Home: React.FC = () => {
                     <h3 className="text-lg font-semibold mb-4 text-white">Results:</h3>
                     <ul className="space-y-4">
                       {result.references.map((ref, index) => (
-                        <li
-                          key={index}
-                          className="p-4 border rounded-lg hover:shadow-lg transition"
-                        >
+                        <li key={index} className="p-4 border rounded-lg hover:shadow-lg transition">
                           <a
                             href={ref["*"]}
                             target="_blank"

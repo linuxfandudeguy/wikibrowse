@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 // Localization strings for different languages
 const localizedText = {
@@ -273,7 +273,11 @@ export const useLocalization = () => {
 };
 
 // Localization Provider component
-export const LocalizationProvider: React.FC = ({ children }) => {
+interface LocalizationProviderProps {
+  children: ReactNode;
+}
+
+export const LocalizationProvider: React.FC<LocalizationProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<string>("en");
 
   return (

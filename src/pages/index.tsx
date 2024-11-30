@@ -8,12 +8,17 @@ interface Thumbnail {
   source: string;
 }
 
+interface ImageItem {
+  title: string;
+}
+
 interface Page {
   title: string;
   extract: string;
   thumbnail?: Thumbnail;
   missing?: boolean;
   extlinks?: { "*": string }[];
+  images?: ImageItem[]; // Add images to the Page type
 }
 
 interface QueryResult {
@@ -25,6 +30,7 @@ interface SearchResult {
   extract: string;
   image: string | null;
   references: { ["*"]: string }[];
+  images: string[]; // Array to store image URLs
 }
 
 const Home: React.FC = () => {
@@ -48,7 +54,7 @@ const Home: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
+        `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks|images&titles=${query}&exintro=1&pithumbsize=500`
       );
       const data: QueryResult = await response.json();
 
@@ -63,11 +69,14 @@ const Home: React.FC = () => {
       if (!page || page.missing) {
         setError("No results found.");
       } else {
+        const imageUrls = page.images ? page.images.map((img) => `https://${language}.wikipedia.org/wiki/File:${img.title}`) : [];
+        
         setResult({
           title: page.title,
           extract: page.extract || "No description available.",
           image: page.thumbnail ? page.thumbnail.source : null,
           references: page.extlinks || [],
+          images: imageUrls, // Set the image URLs in the result
         });
       }
     } catch {
@@ -195,6 +204,26 @@ const Home: React.FC = () => {
                       ))}
                     </ul>
                   </div>
+
+                  {/* Images Section */}
+                  {result.images.length > 0 && (
+                    <div className="border-t pt-6">
+                      <h3 className="text-lg font-semibold text-white mb-4">Images</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {result.images.map((img, index) => (
+                          <div key={index} className="p-2">
+                            <Image
+                              src={img}
+                              alt={`Image ${index + 1}`}
+                              width={300}
+                              height={200}
+                              className="w-full h-auto rounded-lg"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

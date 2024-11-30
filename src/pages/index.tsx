@@ -16,6 +16,10 @@ interface ImageInfo {
   url: string;
 }
 
+interface FilePage {
+  imageinfo?: ImageInfo[];
+}
+
 interface Page {
   title: string;
   extract: string;
@@ -88,6 +92,7 @@ const Home: React.FC = () => {
             const filePage = fileData.query?.pages;
             const file = filePage ? Object.values(filePage)[0] : null;
 
+            // Check if file has imageinfo and is not null
             if (file && file.imageinfo && file.imageinfo[0]) {
               const fileInfo = file.imageinfo[0];
               const imageUrl = fileInfo.url; // Actual image URL
@@ -238,10 +243,16 @@ const Home: React.FC = () => {
                   {result.images.length > 0 && (
                     <div className="mt-6">
                       <h3 className="text-lg font-semibold text-white">Images:</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {result.images.map((img, index) => (
-                          <div key={index} className="flex justify-center">
-                            <img src={img} alt={`Image ${index + 1}`} className="rounded-lg shadow-md" />
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {result.images.map((imageUrl, index) => (
+                          <div key={index} className="w-full h-auto rounded-lg overflow-hidden">
+                            <Image
+                              src={imageUrl}
+                              alt={`Image ${index + 1}`}
+                              width={200}
+                              height={200}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                         ))}
                       </div>

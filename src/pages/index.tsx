@@ -116,7 +116,7 @@ const Home: React.FC = () => {
 
           {/* Language Picker */}
           <div className="px-6 py-4 border-b border-gray-600">
-            <LanguagePicker language={language} setLanguage={setLanguage} />
+            <LanguagePicker />
           </div>
 
           {/* Search Bar */}

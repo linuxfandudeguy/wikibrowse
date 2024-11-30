@@ -12,6 +12,10 @@ interface ImageItem {
   title: string;
 }
 
+interface ImageInfo {
+  url: string;
+}
+
 interface Page {
   title: string;
   extract: string;
@@ -19,6 +23,10 @@ interface Page {
   missing?: boolean;
   extlinks?: { "*": string }[];
   images?: ImageItem[]; // Add images to the Page type
+}
+
+interface FilePage {
+  imageinfo?: ImageInfo[];
 }
 
 interface QueryResult {
@@ -84,7 +92,7 @@ const Home: React.FC = () => {
             const filePage = fileData.query?.pages;
             const file = filePage ? Object.values(filePage)[0] : null;
 
-            if (file && file.imageinfo) {
+            if (file && file.imageinfo && file.imageinfo[0]) {
               const fileInfo = file.imageinfo[0];
               const imageUrl = fileInfo.url; // Actual image URL
 

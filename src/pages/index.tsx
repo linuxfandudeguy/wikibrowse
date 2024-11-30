@@ -48,7 +48,7 @@ const Home: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
+        https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500
       );
       const data: QueryResult = await response.json();
 
@@ -116,7 +116,7 @@ const Home: React.FC = () => {
 
           {/* Language Picker */}
           <div className="px-6 py-4 border-b border-gray-600">
-            <LanguagePicker />
+            <LanguagePicker language={language} setLanguage={setLanguage} />
           </div>
 
           {/* Search Bar */}
@@ -204,5 +204,3 @@ const Home: React.FC = () => {
     </>
   );
 };
-
-export default Home;

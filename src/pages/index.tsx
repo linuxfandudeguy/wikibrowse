@@ -48,7 +48,7 @@ const Home: React.FC = () => {
 
     try {
       const response = await fetch(
-        https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500
+        `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
       );
       const data: QueryResult = await response.json();
 
@@ -204,3 +204,5 @@ const Home: React.FC = () => {
     </>
   );
 };
+
+export default Home;

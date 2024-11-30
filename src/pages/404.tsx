@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React from "react";
 import Head from "next/head";
 
 const NotFound: React.FC = () => {
@@ -22,7 +22,7 @@ const NotFound: React.FC = () => {
           {/* 404 Message */}
           <div className="flex-grow p-6 text-center">
             <h2 className="text-2xl font-bold text-white mb-4">This page has either been deleted or does not exist.</h2>
-            <p className="text-white mb-4">The page you're looking for could not be found. Please check the URL or go back to the homepage.</p>
+            <p className="text-white mb-4">The page you&apos;re looking for could not be found. Please check the URL or go back to the homepage.</p>
           </div>
         </div>
       </div>

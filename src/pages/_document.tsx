@@ -7,6 +7,7 @@ export default function Document() {
       <Head>
         {/* Google Tag Manager (head) */}
         <Script
+          id="gtm-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `

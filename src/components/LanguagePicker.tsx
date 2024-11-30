@@ -2,7 +2,7 @@ import React from "react";
 import { useLocalization } from "./I18n";
 
 const LanguagePicker: React.FC = () => {
-  const { language, setLanguage } = useLocalization(); // Get language and setLanguage from context
+  const { language } = useLocalization(); // Get language from context
 
   const languages = [
     { code: "en", label: "English" },

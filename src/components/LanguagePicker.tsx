@@ -1,9 +1,11 @@
 import React from "react";
-import { useLocalization } from "./I18n";
 
-const LanguagePicker: React.FC = () => {
-  const { language } = useLocalization(); // Get language from context
+interface LanguagePickerProps {
+  language: string;
+  setLanguage: React.Dispatch<React.SetStateAction<string>>;
+}
 
+const LanguagePicker: React.FC<LanguagePickerProps> = ({ language, setLanguage }) => {
   const languages = [
     { code: "en", label: "English" },
     { code: "es", label: "Español" },
@@ -25,7 +27,7 @@ const LanguagePicker: React.FC = () => {
     { code: "fa", label: "فارسی (Persian)" },
     { code: "sv", label: "Svenska (Swedish)" },
     { code: "fi", label: "Suomi (Finnish)" },
-    { code: "ga", label: "Gaeilge (Irish)" },
+    { code: "ga", label: "Gaeilge (Irish)" }, // Added Irish
   ];
 
   return (
@@ -33,7 +35,7 @@ const LanguagePicker: React.FC = () => {
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
-        className="bg-gray-700 text-white px-3 py-1 rounded-lg border focus:outline-none text-sm" // Adjusted size with text-sm and smaller padding
+        className="bg-gray-700 text-white px-3 py-1 rounded-lg border focus:outline-none text-sm"
       >
         {languages.map((lang) => (
           <option key={lang.code} value={lang.code}>

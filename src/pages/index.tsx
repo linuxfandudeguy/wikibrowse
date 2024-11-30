@@ -25,10 +25,6 @@ interface Page {
   images?: ImageItem[]; // Add images to the Page type
 }
 
-interface FilePage {
-  imageinfo?: ImageInfo[];
-}
-
 interface QueryResult {
   query?: { pages: Record<string, Page> };
 }

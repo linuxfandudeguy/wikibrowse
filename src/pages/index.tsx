@@ -89,6 +89,7 @@ const Home: React.FC = () => {
             );
             const fileData = await fileResponse.json();
 
+            // Access the file information using the FilePage type
             const filePage = fileData.query?.pages;
             const file = filePage ? Object.values(filePage)[0] : null;
 

@@ -1,11 +1,9 @@
 import React from "react";
+import { useLocalization } from "./I18n";
 
-interface LanguagePickerProps {
-  language: string;
-  setLanguage: React.Dispatch<React.SetStateAction<string>>;
-}
+const LanguagePicker: React.FC = () => {
+  const { language, setLanguage } = useLocalization(); // Get language and setLanguage from context
 
-const LanguagePicker: React.FC<LanguagePickerProps> = ({ language, setLanguage }) => {
   const languages = [
     { code: "en", label: "English" },
     { code: "es", label: "Español" },
@@ -27,7 +25,7 @@ const LanguagePicker: React.FC<LanguagePickerProps> = ({ language, setLanguage }
     { code: "fa", label: "فارسی (Persian)" },
     { code: "sv", label: "Svenska (Swedish)" },
     { code: "fi", label: "Suomi (Finnish)" },
-    { code: "ga", label: "Gaeilge (Irish)" }, // Added Irish
+    { code: "ga", label: "Gaeilge (Irish)" },
   ];
 
   return (

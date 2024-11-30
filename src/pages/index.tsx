@@ -94,7 +94,7 @@ const Home: React.FC = () => {
     "TypeScript",
     "Next.js",
     "Vercel",
-    "Github",
+    "GitHub",
   ];
 
   return (

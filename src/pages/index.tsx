@@ -69,14 +69,39 @@ const Home: React.FC = () => {
       if (!page || page.missing) {
         setError("No results found.");
       } else {
-        const imageUrls = page.images ? page.images.map((img) => `https://${language}.wikipedia.org/wiki/File:${img.title}`) : [];
-        
+        // Fetch image URLs from imageinfo API
+        const imageUrls: string[] = [];
+
+        if (page.images) {
+          for (const img of page.images) {
+            const imageTitle = img.title.replace(/^File:/, ""); // Remove "File:" prefix
+            // Use the imageinfo API to get the actual image URL
+            const fileResponse = await fetch(
+              `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url&titles=File:${encodeURIComponent(imageTitle)}`
+            );
+            const fileData = await fileResponse.json();
+
+            const filePage = fileData.query?.pages;
+            const file = filePage ? Object.values(filePage)[0] : null;
+
+            if (file && file.imageinfo) {
+              const fileInfo = file.imageinfo[0];
+              const imageUrl = fileInfo.url; // Actual image URL
+
+              // Check if the URL is valid and add it to the imageUrls array
+              if (imageUrl) {
+                imageUrls.push(imageUrl);
+              }
+            }
+          }
+        }
+
         setResult({
           title: page.title,
           extract: page.extract || "No description available.",
           image: page.thumbnail ? page.thumbnail.source : null,
           references: page.extlinks || [],
-          images: imageUrls, // Set the image URLs in the result
+          images: imageUrls, // Store the image URLs in the result
         });
       }
     } catch {
@@ -207,18 +232,12 @@ const Home: React.FC = () => {
 
                   {/* Images Section */}
                   {result.images.length > 0 && (
-                    <div className="border-t pt-6">
-                      <h3 className="text-lg font-semibold text-white mb-4">Images</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="mt-6">
+                      <h3 className="text-lg font-semibold text-white">Images:</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {result.images.map((img, index) => (
-                          <div key={index} className="p-2">
-                            <Image
-                              src={img}
-                              alt={`Image ${index + 1}`}
-                              width={300}
-                              height={200}
-                              className="w-full h-auto rounded-lg"
-                            />
+                          <div key={index} className="flex justify-center">
+                            <img src={img} alt={`Image ${index + 1}`} className="rounded-lg shadow-md" />
                           </div>
                         ))}
                       </div>

@@ -8,25 +8,12 @@ interface Thumbnail {
   source: string;
 }
 
-interface ImageItem {
-  title: string;
-}
-
-interface ImageInfo {
-  url: string;
-}
-
-interface FilePage {
-  imageinfo?: ImageInfo[];
-}
-
 interface Page {
   title: string;
   extract: string;
   thumbnail?: Thumbnail;
   missing?: boolean;
   extlinks?: { "*": string }[];
-  images?: ImageItem[]; // Add images to the Page type
 }
 
 interface QueryResult {
@@ -38,7 +25,6 @@ interface SearchResult {
   extract: string;
   image: string | null;
   references: { ["*"]: string }[];
-  images: string[]; // Array to store image URLs
 }
 
 const Home: React.FC = () => {
@@ -62,7 +48,7 @@ const Home: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks|images&titles=${query}&exintro=1&pithumbsize=500`
+        `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages|extlinks&titles=${query}&exintro=1&pithumbsize=500`
       );
       const data: QueryResult = await response.json();
 
@@ -77,41 +63,11 @@ const Home: React.FC = () => {
       if (!page || page.missing) {
         setError("No results found.");
       } else {
-        // Fetch image URLs from imageinfo API
-        const imageUrls: string[] = [];
-
-        if (page.images) {
-          for (const img of page.images) {
-            const imageTitle = img.title.replace(/^File:/, ""); // Remove "File:" prefix
-            // Use the imageinfo API to get the actual image URL
-            const fileResponse = await fetch(
-              `https://${language}.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url&titles=File:${encodeURIComponent(imageTitle)}`
-            );
-            const fileData = await fileResponse.json();
-
-            // Use the FilePage type for the response
-            const filePage = fileData.query?.pages;
-            const file = filePage ? Object.values(filePage)[0] : null;
-
-            // Check if file has imageinfo and is not null
-            if (file && file.imageinfo && file.imageinfo[0]) {
-              const fileInfo = file.imageinfo[0];
-              const imageUrl = fileInfo.url; // Actual image URL
-
-              // Check if the URL is valid and add it to the imageUrls array
-              if (imageUrl) {
-                imageUrls.push(imageUrl);
-              }
-            }
-          }
-        }
-
         setResult({
           title: page.title,
           extract: page.extract || "No description available.",
           image: page.thumbnail ? page.thumbnail.source : null,
           references: page.extlinks || [],
-          images: imageUrls, // Store the image URLs in the result
         });
       }
     } catch {
@@ -239,26 +195,6 @@ const Home: React.FC = () => {
                       ))}
                     </ul>
                   </div>
-
-                  {/* Images Section */}
-                  {result.images.length > 0 && (
-                    <div className="mt-6">
-                      <h3 className="text-lg font-semibold text-white">Images:</h3>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {result.images.map((imageUrl, index) => (
-                          <div key={index} className="w-full h-auto rounded-lg overflow-hidden">
-                            <Image
-                              src={imageUrl}
-                              alt={`Image ${index + 1}`}
-                              width={200}
-                              height={200}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
